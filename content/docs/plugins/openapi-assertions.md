@@ -6,17 +6,17 @@ ogImage: openapi-assertions-plugin.jpeg
 
 # OpenAPI Assertions
 
-Using this plugin, you can test HTTP responses against one or more open API schemas. Just make sure to register the path to schema files when using the plugin.
+Using this plugin, you can test HTTP responses against one or more OpenAPI specifications. Just make sure to register the path to schema files when using the plugin.
 
 ## Setup
 
 Install the package from the npm registry as follows.
 
 ```sh
-npm i -D @japa/api-client@1.4.4
+npm i -D @japa/openapi-assertions@1.0.0
 
 # yarn
-yarn add -D @japa/api-client@1.4.4
+yarn add -D @japa/openapi-assertions@1.0.0
 ```
 
 And register it as a plugin within the `bin/test.js` file.
@@ -25,11 +25,11 @@ And register it as a plugin within the `bin/test.js` file.
 
 ```ts
 // title: ESM
+import { configure, processCliArgs } from '@japa/runner'
 import { assert } from '@japa/assert'
 // highlight-start
 import { openapi } from '@japa/openapi-assertions'
 // highlight-end
-import { configure, processCliArgs } from '@japa/runner'
 
 configure({
   ...processCliArgs(process.argv.slice(2)),
@@ -47,14 +47,14 @@ configure({
 })
 ```
 
-```ts
+```js
 // title: CommonJS
+const { configure, processCliArgs } = require('@japa/runner')
 const { assert } = require('@japa/assert')
 // highlight-start
 const { openapi } = require('@japa/openapi-assertions')
 const path = require('node:path')
 // highlight-end
-const { configure, processCliArgs } = require('@japa/runner')
 
 configure({
   ...processCliArgs(process.argv.slice(2)),
@@ -78,9 +78,9 @@ configure({
 You can test response objects from `axios`, `superagent`, `supertest`, `request`, and `light-my-request` libraries using the following method.
 
 ```ts
-test('get /users', async ({ openapi }) => {
+test('get /users', async ({ assert }) => {
   const response = await supertest(baseUrl).get('/')
-  openapi.isValidResponse(response)
+  assert.isValidApiResponse(response)
 })
 ```
 
@@ -94,20 +94,4 @@ The response is validated as follows:
 
 ## Migrating from `@japa/assert` v3.0.0
 
-To migrate from the OpenAPI testing in `@japa/assert` version 3.0.0, you need to configure the plugin as above, and then change from `assert.isValidApiResponse` to `openapi.isValidResponse`:
-
-```ts
-// title: Old Syntax
-test('get /users', async ({ assert }) => {
-  const response = await supertest(baseUrl).get('/')
-  assert.isValidApiResponse(response)
-})
-```
-
-```ts
-// title: New Syntax
-test('get /users', async ({ openapi }) => {
-  const response = await supertest(baseUrl).get('/')
-  openapi.isValidResponse(response)
-})
-```
+To migrate from the OpenAPI testing in `@japa/assert` version 3.0.0, you need to install and configure the plugin as above. No other changes should be necessary.
